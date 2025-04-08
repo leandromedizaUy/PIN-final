@@ -12,7 +12,9 @@ RUN apt-get update && apt-get upgrade -y && \
 
 # Instalar kubectl
 RUN curl -LO "https://dl.k8s.io/release/$(curl -sL https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
-    chmod +x kubectl && mv kubectl /usr/local/bin/
+    chmod +x kubectl && \
+    mv kubectl /usr/local/bin/ && \
+    kubectl version --client --short
 
 # Instalar Helm
 RUN curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
@@ -23,7 +25,7 @@ RUN curl -fsSL https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /usr/sh
     apt-get update && apt-get install terraform -y
 
 # Descargar e instalar k3s manualmente
-RUN curl -sfL https://github.com/k3s-io/k3s/releases/download/v1.23.12+k3s1/k3s-arm64 -o /usr/local/bin/k3s && \
+RUN curl -sfL https://github.com/k3s-io/k3s/releases/download/v1.23.12+k3s1/k3s-amd64 -o /usr/local/bin/k3s && \
     chmod +x /usr/local/bin/k3s
 
 # Exponer puertos útiles
