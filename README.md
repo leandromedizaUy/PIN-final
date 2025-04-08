@@ -19,16 +19,19 @@ Primero, construye y levanta el contenedor con:
 
 ```bash
 docker-compose up --build -d
+```
 
 Luego, ingresa al contenedor:
 
 ```bash
 docker exec -it devops-lab bash
+```
 
 Para exportar el `KUBECONFIG` (opcional para ejecutar desde afuera):
 
 ```bash
 export KUBECONFIG=./kubeconfig/kubeconfig.yaml
+```
 
 ### 3. Aplicar Terraform
 
@@ -37,6 +40,7 @@ Inicializa Terraform y aplica la configuración:
 ```bash
 terraform init
 terraform apply -auto-approve
+```
 
 Se define en Terraform:
 
@@ -51,6 +55,7 @@ Usa los siguientes comandos para verificar el acceso a NGINX:
 ```bash
 kubectl get pods
 kubectl port-forward <nginx-pod-name> 8080:80
+```
 
 Accede a NGINX desde el navegador en `http://localhost:8080`.
 
@@ -61,6 +66,7 @@ Port-forward Prometheus y Grafana:
 ```bash
 kubectl port-forward svc/prometheus-server -n prometheus 9090:80
 kubectl port-forward svc/grafana -n grafana 3000:80
+```
 
 Accede a Grafana en [http://localhost:3000](http://localhost:3000).
 
@@ -75,3 +81,4 @@ Para borrar todo con Terraform, ejecuta:
 
 ```bash
 terraform destroy
+```
