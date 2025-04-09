@@ -1,78 +1,47 @@
-# DevOps Lab Setup
+# PIN FINAL diplomatura en DevOps - Ejecución automática con GitHub Actions
 
-Este repositorio proporciona los pasos detallados para configurar un entorno de laboratorio DevOps utilizando Docker, Kubernetes (K3s), Terraform, Prometheus y Grafana.
+Al hacer un `git push` al branch `main` del repositorio de GitHub:
 
-## Paso a paso detallado
+Se ejecutará automáticamente este flujo completo:
 
-### 1. Crear el docker-compose y el Dockerfile
+## Terraform:
+- Inicializa (`terraform init`)
+- Aplica (`terraform apply`) y crea:
+  - EC2 con Ubuntu y herramientas instaladas (`user_data`)
+  - VPC
+  - Cluster EKS
+  - Node group con 1 nodo
 
-El contenedor se instala con las siguientes herramientas:
+## Configuración del entorno:
+- Se instalan `kubectl` y `helm`
+- Se genera el `kubeconfig` para acceder al EKS
 
-- kubectl
-- helm
-- terraform
-- k3s (reemplazo de EKS)
+## Deploy de recursos en Kubernetes:
+- Se instala el **EBS CSI driver**
+- Se despliega **Prometheus**
+- Se despliega **Grafana**
+- Se despliega **NGINX** con servicio tipo `LoadBalancer`
 
-### 2. Cómo construir y correr este contenedor
+---
 
-Primero, construye y levanta el contenedor con:
+## Asegurate de tener antes:
 
-```bash
-docker-compose up --build -d
-```
+✅ Todos los archivos correctamente subidos y con permisos válidos en GitHub
 
-Luego, ingresa al contenedor:
+✅ Estos secrets en tu repositorio de GitHub:
 
-```bash
-docker exec -it devops-lab bash
-```
+| Clave                  | Valor                    |
+|------------------------|--------------------------|
+| `AWS_ACCESS_KEY_ID`    | Tu Access Key de IAM     |
+| `AWS_SECRET_ACCESS_KEY`| Tu Secret Key de IAM     |
+| `AWS_REGION`           | `us-east-1`              |
+| `EKS_CLUSTER_NAME`     | `eks-mundos-e`           |
 
-### 3. Aplicar Terraform
+---
 
-Inicializa Terraform y aplica la configuración:
+## ¿Cómo saber si todo funcionó?
 
-```bash
-terraform init
-terraform apply -auto-approve
-```
-
-Se define en Terraform:
-
-- Namespace de Prometheus y Grafana
-- Configuración de Helm charts
-- Despliegue de NGINX
-
-### 4. Verificar NGINX
-
-Usa los siguientes comandos para verificar el acceso a NGINX:
-
-```bash
-kubectl get pods
-kubectl port-forward <nginx-pod-name> 8080:80
-```
-
-Accede a NGINX desde el navegador en `http://localhost:8080`.
-
-### 5. Monitoreo con Prometheus y Grafana
-
-Port-forward Prometheus y Grafana:
-
-```bash
-kubectl port-forward svc/prometheus-server -n prometheus 9090:80
-kubectl port-forward svc/grafana -n grafana 3000:80
-```
-
-Accede a Grafana en [http://localhost:3000](http://localhost:3000).
-
-- **Usuario**: admin
-- **Contraseña**: la que se configura en Helm
-
-Importa los dashboards 3119 y 6417 desde Grafana (son públicos).
-
-### 6. Cleanup
-
-Para borrar todo con Terraform, ejecuta:
-
-```bash
-terraform destroy
-```
+1. Andá a la pestaña **Actions** en tu repositorio → seleccioná la ejecución más reciente
+2. Esperá ~10 minutos a que se provisionen todos los recursos
+3. Entrá a **EC2**, **EKS**, **ELB**, y verificá que los recursos estén activos
+4. Buscá las IPs públicas de **Grafana** y **NGINX** en la consola de AWS
