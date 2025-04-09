@@ -12,12 +12,26 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
- 
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
 
       - name: Terraform init
         run: terraform init -input=false -no-color
 
+      - name: Terraform plan (to see what will be destroyed)
+        run: terraform plan -destroy -out=tfplan -no-color
+
       - name: Terraform destroy
-        run: terraform destroy -auto-approve -no-color
+        run: |
+          terraform destroy -auto-approve -no-color
+        continue-on-error: false
+        env:
+          TF_LOG: DEBUG  # Establece el nivel de log a DEBUG para ver más detalles de lo que hace Terraform
+          TF_LOG_PATH: terraform.log  # Guarda los logs en un archivo
+          
+      - name: Upload Terraform log
+        uses: actions/upload-artifact@v3
+        with:
+          name: terraform-logs
+          path: terraform.log
