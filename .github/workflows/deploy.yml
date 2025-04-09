@@ -1,9 +1,10 @@
 name: Deploy Infraestructura DevOps
 
 on:
-  push:
-    branches:
-      - main
+    push:
+        branches:
+            - main
+    workflow_dispatch:  # Esto permite ejecutar el workflow manualmente desde GitHub
 
 env:
   AWS_REGION: ${{ secrets.AWS_REGION }}
