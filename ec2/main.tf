@@ -4,7 +4,7 @@ provider "aws" {
 
 resource "aws_key_pair" "pin" {
   key_name   = "pin"
-  public_key = file("~/.ssh/id_rsa.pub")
+  public_key = var.ec2_public_key
 }
 
 resource "aws_instance" "devops_ec2" {
