@@ -28,8 +28,5 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
-      - name: Terraform Plan (optional, to review what will be destroyed)
-        run: terraform plan -destroy -out=tfplan
-
       - name: Terraform Destroy
         run: terraform destroy -auto-approve
