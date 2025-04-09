@@ -20,6 +20,14 @@ module "eks" {
   }
 
   enable_irsa = true
+  manage_aws_auth_configmap = true
+  aws_auth_roles = [
+    {
+      rolearn  = "arn:aws:iam::146271912324:role/github-actions-eks-role"
+      username = "github"
+      groups   = ["system:masters"]
+    }
+  ]
 }
 
 module "vpc" {

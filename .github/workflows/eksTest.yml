@@ -8,9 +8,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -18,15 +15,20 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Set up kubectl and kubeconfig
+      - name: Get kubeconfig and token
+        id: eks-auth
         run: |
-          aws eks update-kubeconfig --name eks-mundos-e --region us-east-1
-          
-          # Get auth token and inject it into kubectl
-          TOKEN=$(aws eks get-token --cluster-name eks-mundos-e --region us-east-1 | jq -r '.status.token')
-          
-          # Overwrite user credentials with the token manually
-          kubectl config set-credentials arn:aws:eks:us-east-1:123456789012:cluster/eks-mundos-e --token="$TOKEN"
+          CLUSTER_NAME="eks-mundos-e"
+          REGION="us-east-1"
+
+          # Obtener kubeconfig y escribirlo a archivo temporal
+          aws eks update-kubeconfig --name $CLUSTER_NAME --region $REGION --alias github-eks
+
+          # Obtener el token de autenticación
+          TOKEN=$(aws eks get-token --cluster-name $CLUSTER_NAME --region $REGION | jq -r '.status.token')
+
+          # Reemplazar el token en kubeconfig
+          kubectl config set-credentials github-eks --token="$TOKEN"
 
       - name: Test kubectl get nodes
         run: |
