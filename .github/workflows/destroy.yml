@@ -10,15 +10,11 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_REGION: 'us-east-1'
     steps:
-      - uses: actions/checkout@v1
-
-      - name: Install Terraform
-        env:
-          TERRAFORM_VERSION: "0.12.15"
-        run: |
-          wget https://releases.hashicorp.com/terraform/"$TERRAFORM_VERSION"/terraform_"$TERRAFORM_VERSION"_linux_amd64.zip
-          unzip terraform_"$TERRAFORM_VERSION"_linux_amd64.zip
-          sudo mv terraform /usr/local/bin/
+      - name: Checkout repo
+        uses: actions/checkout@v3
+ 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
 
       - name: Terraform init
         run: terraform init -input=false -no-color
