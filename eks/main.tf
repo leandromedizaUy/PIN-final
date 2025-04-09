@@ -2,13 +2,11 @@ module "eks" {
   source          = "terraform-aws-modules/eks/aws"
   cluster_name    = "eks-mundos-e"
   cluster_version = "1.27"
-  subnet_ids = module.vpc.public_subnets
+  subnet_ids      = module.vpc.public_subnets
   vpc_id          = module.vpc.vpc_id
 
   cluster_endpoint_public_access  = true
   cluster_endpoint_private_access = true
-
-  public_access_cidrs = ["0.0.0.0/0"]
 
   eks_managed_node_groups = {
     default = {
@@ -22,16 +20,7 @@ module "eks" {
   }
 
   enable_irsa = true
-  manage_aws_auth_configmap = true
-  aws_auth_roles = [
-    {
-      rolearn  = "arn:aws:iam::123456789012:role/github-actions-eks-role"
-      username = "github"
-      groups   = ["system:masters"]
-    }
-  ]
 }
-
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
