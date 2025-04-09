@@ -27,12 +27,6 @@ Luego, ingresa al contenedor:
 docker exec -it devops-lab bash
 ```
 
-Para exportar el `KUBECONFIG` (opcional para ejecutar desde afuera):
-
-```bash
-export KUBECONFIG=./kubeconfig/kubeconfig.yaml
-```
-
 ### 3. Aplicar Terraform
 
 Inicializa Terraform y aplica la configuración:

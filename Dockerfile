@@ -14,7 +14,7 @@ RUN apt-get update && apt-get upgrade -y && \
 RUN curl -LO "https://dl.k8s.io/release/$(curl -sL https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
     chmod +x kubectl && \
     mv kubectl /usr/local/bin/ && \
-    kubectl version --client --short
+    kubectl version --client
 
 # Instalar Helm
 RUN curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
@@ -24,12 +24,13 @@ RUN curl -fsSL https://apt.releases.hashicorp.com/gpg | gpg --dearmor -o /usr/sh
     echo "deb [signed-by=/usr/share/keyrings/hashicorp.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" > /etc/apt/sources.list.d/hashicorp.list && \
     apt-get update && apt-get install terraform -y
 
-# Descargar e instalar k3s manualmente
-RUN curl -sfL https://github.com/k3s-io/k3s/releases/download/v1.23.12+k3s1/k3s-amd64 -o /usr/local/bin/k3s && \
-    chmod +x /usr/local/bin/k3s
+# Descargar e instalar minikube
+RUN curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 \\
+    sudo install minikube-linux-amd64 /usr/local/bin/minikube
+
 
 # Exponer puertos útiles
 EXPOSE 6443 3000 9090
 
 # Iniciar k3s y dejar el contenedor corriendo
-CMD ["sh", "-c", "/usr/local/bin/k3s server --disable-agent & tail -f /dev/null"]
+CMD ["sh", "-c", "minikube start"]

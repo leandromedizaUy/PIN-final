@@ -17,6 +17,7 @@ services:
     environment:
       - K3S_KUBECONFIG_OUTPUT=/output/kubeconfig.yaml
       - K3S_KUBECONFIG_MODE=644
+      - KUBECONFIG=/output/kubeconfig.yaml
 
 volumes:
   k3s_data:
