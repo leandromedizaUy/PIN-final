@@ -21,6 +21,8 @@ module "eks" {
     }
   }
 
+  enable_irsa = true
+  manage_aws_auth_configmap = true
   aws_auth_roles = [
     {
       rolearn  = "arn:aws:iam::123456789012:role/github-actions-eks-role"
@@ -28,8 +30,6 @@ module "eks" {
       groups   = ["system:masters"]
     }
   ]
-
-  enable_irsa = truemanage_aws_auth_configmap = true
 }
 
 
