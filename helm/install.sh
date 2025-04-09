@@ -15,3 +15,6 @@ helm install grafana grafana/grafana --namespace grafana \
   --set persistence.enabled=true \
   --set adminPassword='EKS!sAWSome' \
   --set service.type=LoadBalancer
+
+kubectl create deployment nginx --image=nginx
+kubectl expose deployment nginx --type=LoadBalancer --port=80
