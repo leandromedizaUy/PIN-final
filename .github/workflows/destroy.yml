@@ -31,7 +31,7 @@ jobs:
           TF_LOG_PATH: terraform.log  # Guarda los logs en un archivo
           
       - name: Upload Terraform log
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v2
         with:
           name: terraform-logs
           path: terraform.log
