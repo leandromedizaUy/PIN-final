@@ -37,14 +37,19 @@ jobs:
       #- name: Terraform Apply
       #  run: terraform apply -auto-approve -var="ec2_public_key=${{ secrets.EC2_PUBLIC_KEY }}"
 
+
       - name: Install kubectl
         run: |
           curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
           chmod +x kubectl
           sudo mv kubectl /usr/local/bin/
 
-      - name: Set kubeconfig for EKS
-        run: aws eks update-kubeconfig --name eks-mundos-e --region us-east-1
+      - name: Export KUBECONFIG and get EKS token
+        run: |
+            export KUBECONFIG=$HOME/.kube/config
+            aws eks update-kubeconfig --name eks-mundos-e --region us-east-1
+            export TOKEN=$(aws eks get-token --cluster-name eks-mundos-e --region us-east-1 | jq -r '.status.token')
+            kubectl config set-credentials arn:aws:eks:us-east-1:123456789012:cluster/eks-mundos-e --token="$TOKEN"
         env:
             AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
             AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
