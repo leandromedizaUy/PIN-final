@@ -31,11 +31,11 @@ jobs:
       - name: Terraform Init
         run: terraform init
 
-      - name: Terraform Plan
-        run: terraform plan -var="ec2_public_key=${{ secrets.EC2_PUBLIC_KEY }}"
+      #- name: Terraform Plan
+      #  run: terraform plan -var="ec2_public_key=${{ secrets.EC2_PUBLIC_KEY }}"
 
-      - name: Terraform Apply
-        run: terraform apply -auto-approve -var="ec2_public_key=${{ secrets.EC2_PUBLIC_KEY }}"
+      #- name: Terraform Apply
+      #  run: terraform apply -auto-approve -var="ec2_public_key=${{ secrets.EC2_PUBLIC_KEY }}"
 
       - name: Install kubectl
         run: |
