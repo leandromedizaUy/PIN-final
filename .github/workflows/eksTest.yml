@@ -1,0 +1,33 @@
+name: Test access to EKS
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-eks:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Set up kubectl and kubeconfig
+        run: |
+          aws eks update-kubeconfig --name eks-mundos-e --region us-east-1
+          
+          # Get auth token and inject it into kubectl
+          TOKEN=$(aws eks get-token --cluster-name eks-mundos-e --region us-east-1 | jq -r '.status.token')
+          
+          # Overwrite user credentials with the token manually
+          kubectl config set-credentials arn:aws:eks:us-east-1:123456789012:cluster/eks-mundos-e --token="$TOKEN"
+
+      - name: Test kubectl get nodes
+        run: |
+          kubectl get nodes
