@@ -39,10 +39,14 @@ jobs:
 
       - name: Install kubectl
         run: |
-          curl -o kubectl https://s3.us-east-1.amazonaws.com/amazon-eks/1.27.1/2023-07-05/bin/linux/amd64/kubectl
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
           chmod +x kubectl
           sudo mv kubectl /usr/local/bin/
 
+
+      - name: Test kubectl
+        run: kubectl get nodes    
+      
       - name: Install Helm
         run: |
           curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
