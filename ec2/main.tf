@@ -41,7 +41,11 @@ resource "aws_iam_role_policy_attachment" "ec2_policy" {
   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
 }
 
+resource "random_pet" "iam_profile_suffix" {
+  length = 4
+}
+
 resource "aws_iam_instance_profile" "ec2_admin" {
-  name = "ec2-admin-iam-profile-"+var.test
+  name = "ec2-admin-${random_pet.iam_profile_suffix.id}"
   role = aws_iam_role.ec2_role.name
 }
