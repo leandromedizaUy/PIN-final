@@ -30,8 +30,3 @@ jobs:
           TF_LOG: DEBUG  # Establece el nivel de log a DEBUG para ver más detalles de lo que hace Terraform
           TF_LOG_PATH: terraform.log  # Guarda los logs en un archivo
           
-      - name: Upload Terraform log
-        uses: actions/upload-artifact@v2
-        with:
-          name: terraform-logs
-          path: terraform.log
