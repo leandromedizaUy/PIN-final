@@ -1,0 +1,12 @@
+module "eks" {
+  source          = "terraform-aws-modules/eks/aws"
+  cluster_name    = "eks-mundos-e"
+  cluster_version = "1.29"
+  enable_irsa     = true
+  vpc_id      = module.vpc.vpc_id
+
+  # Without node group
+  create_node_security_group = false
+  node_security_group_id     = null
+  eks_managed_node_groups    = {}
+}
