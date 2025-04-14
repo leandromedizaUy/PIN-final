@@ -2,10 +2,21 @@
 
 set -e
 
+echo "AWS identity:"
+aws sts get-caller-identity
+
+echo "Current Kubernetes context:"
+kubectl config current-context
+
 echo "Configurando acceso al cluster EKS..."
 aws eks update-kubeconfig \
   --region "$AWS_REGION" \
-  --name "$EKS_CLUSTER_NAME"
+  --name "$EKS_CLUSTER_NAME" \
+  --alias default
+
+echo "Confirmar credenciales..."
+kubectl config use-context arn:aws:eks:$AWS_REGION:146271912324:cluster/$EKS_CLUSTER_NAME
+kubectl get nodes
 
 echo "Instalando Prometheus..."
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
