@@ -50,5 +50,5 @@ jobs:
           export EKS_CLUSTER_NAME=${{ secrets.EKS_CLUSTER_NAME }}
 
           chmod +x /home/ubuntu/scripts/deploy_monitoring.sh
-          ./home/ubuntu/scripts/deploy_monitoring.sh
+          /home/ubuntu/scripts/deploy_monitoring.sh
           
