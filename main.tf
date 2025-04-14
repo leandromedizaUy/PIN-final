@@ -83,7 +83,7 @@ module "eks_node_group" {
   node_group_name  = "ng-mundos-e"
   node_role_arn    = aws_iam_role.eks_node_role.arn
   subnet_ids       = module.network.private_subnet_ids
-  ssh_key_name     = module.remote_k8s_host.public_ssh
+  ssh_key_name     = "remote-host-control-ssh"
   instance_types   = ["t3.medium"]
   desired_size     = 2
   min_size         = 1
