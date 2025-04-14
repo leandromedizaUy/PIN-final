@@ -12,7 +12,7 @@ kubectl version --client
 helm version
 
 echo "Aplicando manifiesto de NGINX..."
-kubectl apply -f ~/k8s/manifiesto_nginx.yml
+kubectl apply -f ~/k8s/manifiesto_nginx.yml --validate=false
 
 echo "Instalando Ingress Controller con Helm..."
 helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx

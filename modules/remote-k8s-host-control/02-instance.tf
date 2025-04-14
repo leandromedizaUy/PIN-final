@@ -14,6 +14,28 @@ resource "aws_iam_role" "ec2_admin" {
   })
 }
 
+# Definir la política que permite el permiso eks:DescribeCluster
+resource "aws_iam_policy" "eks_describe_cluster" {
+  name        = "eks-describe-cluster-policy"
+  description = "Permite describir el clúster de EKS"
+  policy      = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect   = "Allow",
+        Action   = "eks:DescribeCluster",
+        Resource = "arn:aws:eks:us-east-1:146271912324:cluster/eks-mundos-e"
+      }
+    ]
+  })
+}
+
+# Asociar la política al rol ec2-admin
+resource "aws_iam_role_policy_attachment" "ec2_admin_policy_attachment" {
+  policy_arn = aws_iam_policy.eks_describe_cluster.arn
+  role       = aws_iam_role.ec2_admin.name
+}
+
 resource "aws_iam_role_policy_attachment" "ebs_access" {
   role       = aws_iam_role.ec2_admin.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
