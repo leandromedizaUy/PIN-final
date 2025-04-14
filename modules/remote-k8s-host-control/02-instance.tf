@@ -56,7 +56,7 @@ resource "aws_instance" "remote-host-control" {
   user_data = "${file("set-k8s-host-control.sh")}"
 
   # Asigna la llave que hemos creado a la instancia:
-  key_name = aws_key_pair.remote-host-control-ssh.key_name
+  key_name = "remote-host-control-ssh"
 
   # Asigna los SG a la instancia:
   vpc_security_group_ids = [
