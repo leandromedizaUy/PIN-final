@@ -12,5 +12,16 @@ module "vpc" {
   enable_nat_gateway = var.enable_nat_gateway
   single_nat_gateway = true
 
+
+  public_subnet_tags = {
+    "kubernetes.io/cluster/eks-mundos-e" = "owned"
+    "kubernetes.io/role/elb"             = "1"
+  }
+
+  private_subnet_tags = {
+    "kubernetes.io/cluster/eks-mundos-e" = "owned"
+    "kubernetes.io/role/internal-elb"    = "1"
+  }
+
   tags = var.tags
 }
