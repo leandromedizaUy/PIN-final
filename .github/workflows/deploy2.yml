@@ -19,7 +19,7 @@ jobs:
           chmod 600 private_key.pem
           mkdir -p ~/.ssh
           chmod 700 ~/.ssh
-          ssh-keyscan -H $EC2_DNS >> ~/.ssh/known_hosts
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
       - name: Clone Repo And Execute Pods
         run: |
