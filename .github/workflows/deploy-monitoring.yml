@@ -35,7 +35,7 @@ jobs:
         key: ${{ secrets.EC2_PRIVATE_KEY }}
         script: |
           ls -la /home/ubuntu/
-          
+
     - name: Run deploy_monitoring.sh on EC2
       uses: appleboy/ssh-action@v1.0.0
       with:
@@ -49,6 +49,6 @@ jobs:
           export AWS_REGION=${{ secrets.AWS_REGION }}
           export EKS_CLUSTER_NAME=${{ secrets.EKS_CLUSTER_NAME }}
 
-          chmod +x /home/ubuntu/deploy_monitoring.sh
-          /home/ubuntu/deploy_monitoring.sh
+          chmod +x /home/ubuntu/scripts/deploy_monitoring.sh
+          ./home/ubuntu/scripts/deploy_monitoring.sh
           
