@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-podname
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx-podname
+  template:
+    metadata:
+      labels:
+        app: nginx-podname
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+          command: ["/bin/sh", "-c"]
+          args:
+            - "echo $HOSTNAME > /usr/share/nginx/html/index.html && exec nginx -g 'daemon off;'"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc
+spec:
+  type: ClusterIP
+  selector:
+    app: nginx-podname
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
