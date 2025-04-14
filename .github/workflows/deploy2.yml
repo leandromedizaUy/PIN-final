@@ -13,31 +13,6 @@ jobs:
       - name: Create Public Access Key
         run: echo "${{ secrets.EC2_PUBLIC_KEY }}" > remote-host-control.pub
 
-      - name: Install Terraform
-        env:
-          TERRAFORM_VERSION: "1.10.5"
-        run: |
-          tf_version=$TERRAFORM_VERSION
-          wget https://releases.hashicorp.com/terraform/"$tf_version"/terraform_"$tf_version"_linux_amd64.zip
-          unzip terraform_"$tf_version"_linux_amd64.zip
-          sudo mv terraform /usr/local/bin/
-
-      - name: Terraform init
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        run: terraform init -input=false
-
-      - name: Get EC2 DNS from Terraform output
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        id: get_dns
-        run: |
-          EC2_DNS=$(terraform output -raw remote_k8s_host_public_dns)
-          echo "EC2_DNS=$EC2_DNS" >> $GITHUB_ENV
-          echo "::set-output name=ec2_dns::$EC2_DNS"
-
       - name: Config SSH
         run: |
           echo "${{ secrets.EC2_PRIVATE_KEY }}" > private_key.pem
@@ -48,14 +23,14 @@ jobs:
 
       - name: Clone Repo And Execute Pods
         run: |
-          ssh -i private_key.pem ${{ secrets.EC2_USER }}@${{ env.EC2_HOST }} << 'EOF'
+          ssh -i private_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             git clone https://github.com/dfbastidas/manifiestos
             kubectl apply -f manifiestos/manifiesto_nginx.yml
           EOF
 
       - name: Config Ingress Controller
         run: |
-          ssh -i private_key.pem ${{ secrets.EC2_USER }}@${{ env.EC2_HOST }} << 'EOF'
+          ssh -i private_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
             helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
             helm repo update
             helm install ingress-nginx ingress-nginx/ingress-nginx --namespace ingress-nginx --create-namespace
@@ -68,7 +43,7 @@ jobs:
 
       #- name: Install Prometheus
       # run: |
-      #   ssh -i private_key.pem ${{ secrets.EC2_USER }}@${{ env.EC2_DNS }} << 'EOF'
+      #   ssh -i private_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_DNS }} << 'EOF'
       #     helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 
       #     helm repo update
