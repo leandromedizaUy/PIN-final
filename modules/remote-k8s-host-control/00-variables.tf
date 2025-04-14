@@ -23,3 +23,9 @@ variable "team" {
   description = "team project"
   default = "devops"
 }
+
+variable "vpc_id" {
+  type = string
+}
+
+variable "public_subnet_ids" {}
