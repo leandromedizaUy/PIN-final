@@ -20,6 +20,9 @@ module "network" {
   tags = {
     "Environment" = "dev"
     "Owner"       = "infra"
+    "kubernetes.io/cluster/eks-mundos-e" = "owned"
+    "kubernetes.io/role/internal-elb"           = "1" # si es privada
+    "kubernetes.io/role/elb"                = "1" # si es pública
   }
 }
 
