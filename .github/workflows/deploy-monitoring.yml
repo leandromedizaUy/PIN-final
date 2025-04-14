@@ -34,7 +34,7 @@ jobs:
         username: ubuntu
         key: ${{ secrets.EC2_PRIVATE_KEY }}
         script: |
-          ls -la /home/ubuntu/
+          ls -la /home/ubuntu/scripts/
 
     - name: Run deploy_monitoring.sh on EC2
       uses: appleboy/ssh-action@v1.0.0
