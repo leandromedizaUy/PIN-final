@@ -13,7 +13,7 @@ resource "aws_eks_node_group" "this" {
   instance_types = var.instance_types
 
   remote_access {
-    ec2_ssh_key = var.ssh_key_name
+    ec2_ssh_key = "remote-host-control-ssh"
   }
 
   ami_type       = "AL2_x86_64"
