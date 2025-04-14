@@ -1,31 +1,37 @@
 name: Deploy to EKS from EC2
 
 on:
-  workflow_dispatch:  # lo podés lanzar manualmente desde la pestaña Actions
+  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
+    - name: Checkout repo
       uses: actions/checkout@v3
 
-    - name: Copy deployment files to EC2
+    - name: Copy deploy.sh and manifests to EC2
       uses: appleboy/scp-action@v0.1.4
       with:
         host: ${{ secrets.EC2_HOST }}
-        username: ${{ secrets.EC2_USER }}
-        key: ${{ secrets.EC2_SSH_KEY }}
-        source: "./scripts/deploy.sh,./k8s"
+        username: ec2-user
+        key: ${{ secrets.EC2_PUBLIC_KEY }}
+        source: "scripts/deploy.sh,k8s"
         target: "~/"
 
     - name: Run deployment script on EC2
       uses: appleboy/ssh-action@v1.0.0
       with:
         host: ${{ secrets.EC2_HOST }}
-        username: ${{ secrets.EC2_USER }}
-        key: ${{ secrets.EC2_SSH_KEY }}
+        username: ec2-user
+        key: ${{ secrets.EC2_PUBLIC_KEY }}
+        envs: AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY,AWS_REGION,EKS_CLUSTER_NAME
         script: |
+          export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
+          export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          export AWS_REGION=${{ secrets.AWS_REGION }}
+          export EKS_CLUSTER_NAME=${{ secrets.EKS_CLUSTER_NAME }}
+
           chmod +x ~/scripts/deploy.sh
           ~/scripts/deploy.sh
