@@ -24,9 +24,18 @@ jobs:
         host: ${{ secrets.EC2_HOST }}
         username: ubuntu
         key: ${{ secrets.EC2_PRIVATE_KEY }}
-        source: "./scripts/deploy_monitoring.sh"
+        source: "scripts/deploy_monitoring.sh"
         target: "/home/ubuntu/"
 
+    - name: List files on EC2
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ubuntu
+        key: ${{ secrets.EC2_PRIVATE_KEY }}
+        script: |
+          ls -la /home/ubuntu/
+          
     - name: Run deploy_monitoring.sh on EC2
       uses: appleboy/ssh-action@v1.0.0
       with:
